@@ -11,9 +11,9 @@ class App extends Component {
     this.state = {
       /* Initially the list of monsters is empty */
       monsters: [],
-      searchField: '', 
+      searchField: '',
     }
-  }
+  };
 
   /* Runs whenever the component mounts */
   componentDidMount() {
@@ -27,36 +27,47 @@ class App extends Component {
           console.log(this.state);                                                    /* Log the output to console */
         }
       ));
-  }
+  };
+
+  /* Moving the searchChange function out, so that it only gets built once */
+  onSearchChange = (event) => {
+    const searchField = event.target.value.toLocaleLowerCase();              /* 'AaaAa' => 'aaaaa' changed to lowercase*/
+
+    this.setState(() => {                                             
+      /* To leverage the value to search string from input to filteredMonsters we move it up to the state */
+      return { searchField };
+    });
+  };
 
   /* To render the component */
   render() {
 
+    const { monsters, searchField } = this.state;
+    const { onSearchChange } = this;
+
     /* We search through the list of monsters based on search field, and return only those that match */
-    const filteredMonsters = this.state.monsters.filter((monster) => {
-      return monster.name.toLocaleLowerCase().includes(this.state.searchField);
+    const filteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
     });
 
     return (
       /* [ { name: 'Pratik' }, { name: 'Jash' } ] */
       <div className="App">
-        <input className='search-box' type='search' placeholder='search monsters' onChange={(event) => {
-
-          /* 'AaaAa' => 'aaaaa' changed to lowercase*/
-          const searchField = event.target.value.toLocaleLowerCase();
-
-          /*Then set the new state so that react can re-render */
-          this.setState(() => {
-            /* To leverage the value to search string from input to filteredMonsters we move it up to the state */ 
-            return { searchField };
-          });
-        }} />
+        <input 
+          className='search-box' 
+          type='search' 
+          placeholder='search monsters' 
+          onChange={ onSearchChange } 
+        /> 
+        
         {
           /* Iterate over filteredMonsters instead of original one so that we don't modify the original */
           filteredMonsters.map((monster) => {
-            return <div key={monster.id}>
+            return (
+              <div key={monster.id}>
               <h1>{monster.name}</h1>
-            </div>
+              </div>
+            )
           })
         }
       </div>
