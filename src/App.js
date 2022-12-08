@@ -11,6 +11,7 @@ class App extends Component {
     this.state = {
       /* Initially the list of monsters is empty */
       monsters: [],
+      searchField: '', 
     }
   }
 
@@ -30,26 +31,29 @@ class App extends Component {
 
   /* To render the component */
   render() {
+
+    /* We search through the list of monsters based on search field, and return only those that match */
+    const filteredMonsters = this.state.monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(this.state.searchField);
+    });
+
     return (
       /* [ { name: 'Pratik' }, { name: 'Jash' } ] */
       <div className="App">
         <input className='search-box' type='search' placeholder='search monsters' onChange={(event) => {
 
-          /* 'AaaAa' => 'aaaaa' */
-          const searchString = event.target.value.toLocaleLowerCase();
-
-          /* We search through the list of monsters based on search string(change to lowercase), and return only those that match */
-          const filteredMonsters = this.state.monsters.filter((monster) => {
-            return monster.name.toLocaleLowerCase().includes(searchString);
-          });
+          /* 'AaaAa' => 'aaaaa' changed to lowercase*/
+          const searchField = event.target.value.toLocaleLowerCase();
 
           /*Then set the new state so that react can re-render */
           this.setState(() => {
-            return { monsters: filteredMonsters };
+            /* To leverage the value to search string from input to filteredMonsters we move it up to the state */ 
+            return { searchField };
           });
         }} />
         {
-          this.state.monsters.map((monster) => {
+          /* Iterate over filteredMonsters instead of original one so that we don't modify the original */
+          filteredMonsters.map((monster) => {
             return <div key={monster.id}>
               <h1>{monster.name}</h1>
             </div>
