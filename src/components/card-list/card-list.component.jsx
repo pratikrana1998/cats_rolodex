@@ -1,19 +1,21 @@
 import { Component } from "react";
+import Card from "../card/card.component";
+
+import './card-list.styles.css';
 
 class CardList extends Component {
 
     render() {
-        const { monsters } = this.props;
+        const { cats } = this.props;
         /* [ { name: 'Pratik' }, { name: 'Jash' } ] */
         return (
-            <div>
+            <div className='card-list'>
                 {
-                    /* Iterate over filteredMonsters instead of original one so that we don't modify the original */
-                    monsters.map((monster) => {
+                    /* Iterate over filteredcats instead of original one so that we don't modify the original */
+                    cats.map((cat) => {
+
                         return (
-                        <div key={monster.id}>
-                        <h1>{monster.name}</h1>
-                        </div>
+                            <Card cat={cat} />
                         )
                     }) 
                 }
